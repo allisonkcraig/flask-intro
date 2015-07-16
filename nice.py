@@ -10,7 +10,10 @@ app = Flask(__name__)
 # route to handle the landing page of a website.
 @app.route('/')
 def start_here():
-    return "Hi! This is the home page."
+    return """Hi! This is the home page.
+        <a href="/hello">Hello<a>
+    """
+
 
 # route to display a simple web page
 @app.route('/hello')
@@ -23,24 +26,32 @@ def say_hello():
         </head>
         <body>
             <h1>Hi There!</h1>
-            <form action="/greet">
+            <form action="/greet" method="POST">
                 <label>What's your name? <input type="text" name="person"></label>
+                <label>Choose a Compliment
+                <select name="compliment">
+                    <option value="awesome">awesome</option>
+                    <option value="terrific">terrific</option>
+                    <option value="coolio">coolio</option>
+                    <option value="neato">neato</option>
+                </select>
+                </label>
                 <input type="submit">
             </form>
         </body>
     </html>
-
     """
 
-@app.route('/greet')
+@app.route('/greet', methods=["POST"])
 def greet_person():
-    player = request.args.get("person")
+    player = request.form.get("person")
 
-    AWESOMENESS = [
-        'awesome', 'terrific', 'fantastic', 'neato', 'fantabulous', 'wowza', 'oh-so-not-meh',
-        'brilliant', 'ducky', 'coolio', 'incredible', 'wonderful', 'smashing', 'lovely']
+    # AWESOMENESS = [
+    #     'awesome', 'terrific', 'fantastic', 'neato', 'fantabulous', 'wowza', 'oh-so-not-meh',
+    #     'brilliant', 'ducky', 'coolio', 'incredible', 'wonderful', 'smashing', 'lovely']
 
-    compliment = choice(AWESOMENESS)
+    # compliment = choice(AWESOMENESS)
+    compliment = request.form.get("compliment")
 
     return """
     <!DOCTYPE html>
@@ -58,3 +69,4 @@ if __name__ == '__main__':
     # debug=True gives us error messages in the browser and also "reloads" our web app
     # if we change the code.
     app.run(debug=True)
+    
